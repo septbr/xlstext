@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <sys/stat.h>
 
@@ -198,8 +199,8 @@ Result set_files(File *files[], int *count, int *is_directory, Command command)
 
             if (!stat(path, &st) && S_ISREG(st.st_mode))
             {
-                const char *ext = strrchr(path, '.');
-                if (!stricmp(ext, ".xls"))
+                const char *dot = strrchr(path, '.');
+                if (dot && (dot[1] == 'x' || dot[1] == 'X') && (dot[2] == 'l' || dot[2] == 'L') && (dot[3] == 's' || dot[3] == 'S') && dot[4] == 0)
                 {
                     *files = (File *)realloc(*files, sizeof(File) * (*count + 1));
                     (*files)[*count].path = path;
@@ -238,7 +239,7 @@ Result set_files(File *files[], int *count, int *is_directory, Command command)
 void free_files(File *files[], int count)
 {
     for (int i = 0; i < count; ++i)
-        free(files[i]->path);
+        free((*files)[i].path);
     free(*files);
     *files = NULL;
 }

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "xlstext.h"
 
@@ -78,7 +80,11 @@ int main(int argc, char *argv[])
                 *dot = 0;
                 if (access(path, F_OK))
                 {
+#ifdef _WIN32
                     if (mkdir(path))
+#else
+                    if (mkdir(path, 0777))
+#endif
                         break;
                 }
                 *dot = ch;
@@ -133,7 +139,10 @@ int main(int argc, char *argv[])
                     strcat(url_tmp, name);
                     char *dot = strrchr(url_tmp, '.');
                     const char *ext = i == 0 ? ".csv" : ".json";
-                    dot && !stricmp(dot, ".xls") ? strcpy(dot, ext) : strcat(url_tmp, ext);
+                    if (dot && (dot[1] == 'x' || dot[1] == 'X') && (dot[2] == 'l' || dot[2] == 'L') && (dot[3] == 's' || dot[3] == 'S') && dot[4] == 0)
+                        strcpy(dot, ext);
+                    else
+                        strcat(url_tmp, ext);
                     url = url_tmp;
                 }
                 else if (i == 1 && !jsons)
@@ -160,7 +169,7 @@ int main(int argc, char *argv[])
                 {
                     char *shortname = local_to_utf8(name);
                     char *dot = strrchr(shortname, '.');
-                    if (dot && !stricmp(dot, ".xls"))
+                    if (dot && (dot[1] == 'x' || dot[1] == 'X') && (dot[2] == 'l' || dot[2] == 'L') && (dot[3] == 's' || dot[3] == 'S') && dot[4] == 0)
                         *dot = 0;
 
                     char *name = to_json(shortname);
@@ -235,7 +244,7 @@ int main(int argc, char *argv[])
                             }
                             else if (!strcmp(cell->str, "error"))
                             {
-                                strset(value, 0);
+                                *value = 0;
                                 is_str = 0;
                             }
                         }
@@ -275,7 +284,7 @@ int main(int argc, char *argv[])
         {
             int is_ok = *result == 0;
             char *name_utf8 = local_to_utf8(name);
-            fprintf(is_ok ? stdout : stderr, " %s (%d/%d): %s%s%s\n", is_ok ? "√" : "X", i + 1, count, name_utf8, is_ok ? "" : ": ", result);
+            fprintf(is_ok ? stdout : stderr, " %s (%d/%d): %s%s%s\n", is_ok ? "√" : "×", i + 1, count, name_utf8, is_ok ? "" : ": ", result);
             free(name_utf8);
         }
     }
