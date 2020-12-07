@@ -1,5 +1,5 @@
 # xlstext
-Convert xls files to csv/json files.
+Convert xls files to csv/json files. It splits merge cells automatically.
 
 ### Usage
 ```
