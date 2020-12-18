@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
     }
 
     FILE *jsons = NULL;
+    int ok_cnt = 0;
     for (int i = 0; i < count; ++i)
     {
         const char *path = files[i].path, *name = files[i].name;
@@ -283,11 +284,14 @@ int main(int argc, char *argv[])
         if (command.verbose)
         {
             int is_ok = *result == 0;
+            ok_cnt += is_ok ? 1 : 0;
             char *name_utf8 = local_to_utf8(name);
-            fprintf(is_ok ? stdout : stderr, " %s (%d/%d): %s%s%s\n", is_ok ? "√" : "×", i + 1, count, name_utf8, is_ok ? "" : ": ", result);
+            fprintf(is_ok ? stdout : stderr, "%s (%d/%d): %s%s%s\n", is_ok ? "√" : "×", i + 1, count, name_utf8, is_ok ? "" : ": ", result);
             free(name_utf8);
         }
     }
+    if (command.verbose)
+        fprintf(stdout, "Result: ok: %d, error: %d.", ok_cnt, count - ok_cnt);
     if (jsons)
     {
         fputs("\n}", jsons);
