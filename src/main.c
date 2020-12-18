@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
         }
     }
     if (command.verbose)
-        fprintf(stdout, "Result: ok: %d, error: %d.", ok_cnt, count - ok_cnt);
+        fprintf(stdout, "Result: ok: %d, error: %d.\n", ok_cnt, count - ok_cnt);
     if (jsons)
     {
         fputs("\n}", jsons);
