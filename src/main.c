@@ -182,9 +182,28 @@ int main(int argc, char *argv[])
                     fputs("[\n", json);
             }
 
+            int max_row = 0, max_col = 0;
+            for (int row = worksheet->rows.lastrow; row >= 0; --row)
+            {
+                for (int col = worksheet->rows.lastcol; col >= 0; --col)
+                {
+                    xlsCell *cell = xls_cell(worksheet, row, col);
+                    char *value = strtrim(strdup(cell->str ? cell->str : ""));
+                    int len = strlen(value);
+                    free(value);
+                    if (len > 0)
+                    {
+                        if (max_row < row)
+                            max_row = row;
+                        if (max_col < col)
+                            max_col = col;
+                        break;
+                    }
+                }
+            }
             WORD *spans = NULL;
             int spans_count = 0;
-            for (WORD row = 0; row <= worksheet->rows.lastrow; ++row)
+            for (WORD row = 0; row <= max_row; ++row)
             {
                 if (row > 0)
                 {
@@ -196,7 +215,7 @@ int main(int argc, char *argv[])
                 if (json)
                     fputs(json == jsons ? "        [" : "    [", json);
 
-                for (WORD col = 0; col <= worksheet->rows.lastcol; ++col)
+                for (WORD col = 0; col <= max_col; ++col)
                 {
                     xlsCell *cell = xls_cell(worksheet, row, col);
                     if (cell->rowspan > 0 && cell->colspan > 0)
