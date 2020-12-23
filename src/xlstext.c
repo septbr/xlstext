@@ -284,7 +284,7 @@ char *to_csv(const char *str)
 }
 
 /**
- * \b \f \r \n \t \\ \"
+ * \b \f \r \n \t \\ "
  */
 char *to_json(const char *str)
 {
@@ -292,7 +292,7 @@ char *to_json(const char *str)
     size_t count = strlen(str) + 1;
     while (*ch)
     {
-        if (*ch == '\b' || *ch == '\f' || *ch == '\r' || *ch == '\n' || *ch == '\t' || *ch == '\\' || *ch == '\"')
+        if (*ch == '\b' || *ch == '\f' || *ch == '\r' || *ch == '\n' || *ch == '\t' || *ch == '\\' || *ch == '"')
             ++count;
         else if (iscntrl(*ch))
             --count;
@@ -305,7 +305,7 @@ char *to_json(const char *str)
     ch = str;
     while (*ch)
     {
-        if (*ch == '\b' || *ch == '\f' || *ch == '\r' || *ch == '\n' || *ch == '\t' || *ch == '\\' || *ch == '\"')
+        if (*ch == '\b' || *ch == '\f' || *ch == '\r' || *ch == '\n' || *ch == '\t' || *ch == '\\' || *ch == '"')
         {
             *ch_json++ = '\\';
             *ch_json++ = *ch == '\b' ? 'b' : *ch == '\f' ? 'f' : *ch == '\r' ? 'r' : *ch == '\n' ? 'n' : *ch == '\t' ? 't' : *ch;

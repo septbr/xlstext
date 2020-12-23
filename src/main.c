@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         {
             const char *app_name = strrchr(argv[0], '\\') ? strrchr(argv[0], '\\') + 1 : strrchr(argv[0], '/') ? strrchr(argv[0], '/') + 1 : argv[0];
             fprintf(stderr, "%s\n", result.desc);
+            fprintf(stderr, "\nMore see: https://github.com/septbr/xlstext.git\n");
             fprintf(stderr, "Usage: %s <input> [-v] [-csv outpath] [-json outpath]\n", app_name);
             fprintf(stderr, "    <input>          : input xls file or directory\n");
             fprintf(stderr, "    -v               : print log\n");
